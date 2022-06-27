@@ -1,14 +1,12 @@
 <template>
-  首页
+  <Head></Head>
 </template>
 
 <script>
-
+import Head from '../components/Head.vue'
 export default {
   name: 'HomeView',
-  components: {
-    
-  }
+
 }
 </script>
 <style lang="less" scoped>
