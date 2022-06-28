@@ -2,8 +2,8 @@
   <header class="header-box">
     <div class="left">
       <div class="time">
-        <span>25</span>
-        <span>十月</span>
+        <span>{{timeNow.day}}</span>
+        <span>{{timeNow.month}}</span>
       </div>
       <h1 class="tip">知乎日报</h1>
     </div>
@@ -16,16 +16,45 @@
 </template>
 
 <script>
-import { reactive, toRefs } from "vue";
+import { reactive, toRefs, computed } from "vue";
 import timg from "../assets/images/timg.jpg";
+import { formatTime } from "@/assets/utils.js";
 export default {
   name: "Head",
-  setup() {
+  props: {
+    time: {
+      type: String,
+      default: "",
+    },
+  },
+  setup(props) {
     let state = reactive({
       //   pic: require("../assets/images/timg.jpg"),
       pic: timg,
     });
-    return { ...toRefs(state) };
+    let timeNow = computed(() => {
+      let time = props.time || null;
+      let [month, day] = formatTime(time, "{1}-{2}").split("-");
+      let area = [
+        "一月",
+        "二月",
+        "三月",
+        "四月",
+        "五月",
+        "六月",
+        "七月",
+        "八月",
+        "九月",
+        "十月",
+        "十一月",
+        "十二月",
+      ];
+      return {
+        month: area[month - 1],
+        day,
+      };
+    });
+    return { ...toRefs(state), timeNow };
   },
 };
 </script>

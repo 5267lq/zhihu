@@ -25,6 +25,7 @@ export const handleMaxWidth = function handleMaxWidth() {
 
 // 日期格式化
 export const formatTime = function formatTime(time, template) {
+    // '20220416' '2022/04/16' '2022-04-16 11:30:45'
     if (typeof time !== "string") {
         time = new Date().toLocaleString('zh-CN', { hour12: false });
     }
