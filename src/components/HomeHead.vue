@@ -20,7 +20,7 @@ import { reactive, toRefs, computed } from "vue";
 import timg from "../assets/images/timg.jpg";
 import { formatTime } from "@/assets/utils.js";
 export default {
-  name: "Head",
+  name: "HomeHead",
   props: {
     time: {
       type: String,
