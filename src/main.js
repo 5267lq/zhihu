@@ -3,12 +3,14 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 // 导入VANT
-import Vant from 'vant';
+import Vant,{ Lazyload } from 'vant';
 import 'vant/lib/index.css';
 import 'amfe-flexible'
 // 处理最大宽度
-import {handleMaxWidth } from './assets/utils.js'
+import { handleMaxWidth } from './assets/utils.js'
 handleMaxWidth()
-window.addEventListener('resize',handleMaxWidth)
+window.addEventListener('resize', handleMaxWidth)
 
-createApp(App).use(store).use(router).use(Vant).mount('#app')
+createApp(App).use(store).use(router).use(Vant).use(Lazyload, {
+    lazyComponent: true,
+}).mount('#app')

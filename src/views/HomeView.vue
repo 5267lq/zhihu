@@ -18,11 +18,29 @@
       </van-swipe-item>
     </van-swipe>
   </section>
+  <van-skeleton title :row="5" v-if="newsList.length === 0" />
+  <div v-else>
+    <section class="news-box" v-for="(item, index) in newsList" :key="index">
+      <van-divider content-position="left" v-if="index !== 0">
+        {{formatTime(item.date,"{1}月{2}日")}}</van-divider>
+      <div class="content" v-for="(story, i) in item.stories" :key="i">
+        <news-item :data="story"></news-item>
+      </div>
+      <!-- <div class="content">
+        <news-item v-for="item2 in item.stories" :key="item2.id" :data="item2"></news-item>
+      </div> -->
+    </section>
+    <div class="lazy-more">
+      <van-loading size="14px">您好，精彩数据准备中...</van-loading>
+    </div>
+  </div>
 </template>
 
 <script>
 import HomeHead from "../components/HomeHead.vue";
+import NewsItem from "../components/NewsItem.vue";
 import { reactive, toRefs, onBeforeMount } from "vue";
+import { formatTime } from "@/assets/utils.js";
 import axios from "@/api/index.js";
 export default {
   name: "HomeView",
@@ -37,28 +55,30 @@ export default {
     });
     // 第一次加载获取数据
     onBeforeMount(async () => {
-      let result = await axios.queryNewsLatest();
+      // let result = await axios.queryNewsLatest();
       // state.today=result.date
       // state.newsList=result.stories
       // state.banners=result.top_stories
-      console.log(result);
+      // console.log(result);
       let { date, stories, top_stories } = await axios.queryNewsLatest();
       state.today = date;
       // state.newsList.push({
       //   date,
       //   stories,
       // });
-      state.newsList.push(Object.freeze({
-        date,
-        stories,
-      }));
-      console.log(state.newsList[0])
+      state.newsList.push(
+        Object.freeze({
+          date,
+          stories,
+        })
+      );
+      console.log(state.newsList[0]);
       // state.bannersList = top_stories;
       //性能优化---对于不经常更新的数据冻结，不再做响应式处理
       state.bannersList = Object.freeze(top_stories);
     });
 
-    return { ...toRefs(state) };
+    return { ...toRefs(state), formatTime };
   },
 };
 </script>
@@ -118,5 +138,24 @@ export default {
       }
     }
   }
+}
+.news-box {
+  padding: 0 15px;
+  .van-divider {
+    margin: 5px 0;
+    font-size: 14px;
+    &::before {
+      display: none;
+    }
+  }
+}
+.van-skeleton {
+  padding: 30px 15px;
+}
+.lazy-more{
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  background: #f4f4f4;
 }
 </style>
