@@ -22,7 +22,8 @@
   <div v-else>
     <section class="news-box" v-for="(item, index) in newsList" :key="index">
       <van-divider content-position="left" v-if="index !== 0">
-        {{formatTime(item.date,"{1}月{2}日")}}</van-divider>
+        {{ formatTime(item.date, "{1}月{2}日") }}</van-divider
+      >
       <div class="content" v-for="(story, i) in item.stories" :key="i">
         <news-item :data="story"></news-item>
       </div>
@@ -30,18 +31,18 @@
         <news-item v-for="item2 in item.stories" :key="item2.id" :data="item2"></news-item>
       </div> -->
     </section>
-    <div class="lazy-more">
-      <van-loading size="14px">您好，精彩数据准备中...</van-loading>
-    </div>
+  </div>
+  <div class="lazy-more" v-show="newsList.length !== 0" ref="loadingMore">
+    <van-loading size="14px">您好，精彩数据准备中...</van-loading>
   </div>
 </template>
 
 <script>
 import HomeHead from "../components/HomeHead.vue";
 import NewsItem from "../components/NewsItem.vue";
-import { reactive, toRefs, onBeforeMount } from "vue";
+import { reactive, toRefs, onBeforeMount, onMounted, ref } from "vue";
 import { formatTime } from "@/assets/utils.js";
-import axios from "@/api/index.js";
+import api from "@/api/index.js";
 export default {
   name: "HomeView",
   components: {
@@ -53,6 +54,7 @@ export default {
       newsList: [],
       bannersList: [],
     });
+    let loadingMore = ref(null);
     // 第一次加载获取数据
     onBeforeMount(async () => {
       // let result = await axios.queryNewsLatest();
@@ -60,7 +62,7 @@ export default {
       // state.newsList=result.stories
       // state.banners=result.top_stories
       // console.log(result);
-      let { date, stories, top_stories } = await axios.queryNewsLatest();
+      let { date, stories, top_stories } = await api.queryNewsLatest();
       state.today = date;
       // state.newsList.push({
       //   date,
@@ -77,8 +79,23 @@ export default {
       //性能优化---对于不经常更新的数据冻结，不再做响应式处理
       state.bannersList = Object.freeze(top_stories);
     });
-
-    return { ...toRefs(state), formatTime };
+    // 第一次加载完，获取更多数据
+    onMounted(() => {
+      // 拿到DOM元素
+      console.log(loadingMore.value);
+      // Intersection Observer监听某个Dom元素和可视窗口交叉位置的改变
+      let intersectionObserver = new IntersectionObserver(async (changes) => {
+        let item = changes[0];
+        if (item.isIntersecting) {
+          let result = await api.queryNewsBefore(
+            state.newsList[state.newsList.length - 1]["date"]
+          ); //?
+          state.newsList.push(Object.freeze(result));
+        }
+      });
+      intersectionObserver.observe(loadingMore.value);
+    });
+    return { ...toRefs(state), formatTime, loadingMore };
   },
 };
 </script>
@@ -152,7 +169,7 @@ export default {
 .van-skeleton {
   padding: 30px 15px;
 }
-.lazy-more{
+.lazy-more {
   display: flex;
   justify-content: center;
   padding: 10px;
