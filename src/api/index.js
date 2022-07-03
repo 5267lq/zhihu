@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import axios from "./http";
 export default {
     // 获取今日新闻
@@ -13,20 +14,59 @@ export default {
         })
     },
     // 获取新闻详情
-    queryNewsInfo(id){
-        return axios.get('/api/news_info',{
-            params:{
+    queryNewsInfo(id) {
+        return axios.get('/api/news_info', {
+            params: {
                 id
             }
         })
     },
     // 获取评论点赞信息
-    queryNewsStory(id){
-        return axios.get('/api/story_extra',{
-            params:{
+    queryNewsStory(id) {
+        return axios.get('/api/story_extra', {
+            params: {
                 id
             }
         })
+    },
+    //登录接口
+    login(phone, code) {
+        return axios.post('/api/login', { phone, code })
+    },
+    //获取手机验证码
+    phoneCode(phone) {
+        return axios.post('/api/phone_code', { phone })
+    },
+    //-----------------token--------------------
+    //检测是否登录
+    checkLogin() {
+        return axios.get('/api/check_login')
+    },
+    //获取登录者信息
+    userInfo() {
+        return axios.get('/api/user_info')
+    },
+    userUpdate(username, file) {
+        let fm = FormData()
+        fm.append("username", username)
+        fm.append("file", file)
+        return axios.post('/api/user_update', fm)
+    },
+    //收藏新闻
+    store(newsId) {
+        return axios.post('/api/store', newsId)
+    },
+    //移除收藏
+    storeRemove(id) {
+        return axios.get('/api/store_remove', {
+            params: {
+                id
+            }
+        })
+    },
+    //获取收藏列表
+    getStore() {
+        return axios.get('/api/store_list')
     }
 }
 
