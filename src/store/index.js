@@ -1,5 +1,5 @@
 import { createStore,createLogger } from 'vuex'
-import {checkLogin,userInfo} from '@/api/index.js'
+import api from '@/api/index.js'
 const env=process.env.NODE_ENV
 export default createStore({
   state: {
@@ -19,12 +19,12 @@ export default createStore({
   actions: {
     async changeisLoginAsync({commit}){
       let bool=false
-      let {code}=await checkLogin()
+      let {code}=await api.checkLogin()
       if(+code===0){bool=true}
       commit('changeisLogin',bool)
     },
     async changeInfoAsync({commit}){
-      let {code,data}=await userInfo()
+      let {code,data}=await api.userInfo()
       if(+code===0){
         commit('changeInfo',data)
       }
