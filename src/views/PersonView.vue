@@ -5,7 +5,7 @@
     <p>{{ info.name }}</p>
   </div>
   <van-cell-group>
-    <van-cell title="我的收藏" is-link url="#/store"/>
+    <van-cell title="我的收藏" is-link url="#/store" />
     <van-cell value="退出登录" @click="quit" />
   </van-cell-group>
 </template>
@@ -25,6 +25,7 @@ export default {
     //能进入person页面一定isLogin为true，这么写虽然没必要但更严谨
     let info = computed(() => {
       let { isLogin, info } = store.state;
+      console.log(isLogin, info);
       if (isLogin && info) {
         return info;
       }

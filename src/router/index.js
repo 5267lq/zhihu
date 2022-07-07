@@ -30,7 +30,8 @@ router.beforeEach(async (to, from, next) => {
           next('/login')
           return
         }
-        store.commit('changeInfo',data)
+        store.commit('changeisLogin', true)
+        store.commit('changeInfo', data)
         next()
       } catch (err) {
         console.log(err)
