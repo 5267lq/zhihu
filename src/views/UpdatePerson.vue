@@ -54,7 +54,7 @@ export default {
         return;
       }
       //提交数据给服务器
-      let { code, data } = await api.userUpdate(name, pic[0].file);
+      let { code, data } = await api.userUpdate(name, pic[0].file);//差一个图片格式处理，断点续传、分片传图...
       if (+code !== 0) {
         Toast("信息修改失败，请稍后再试");
         return;
