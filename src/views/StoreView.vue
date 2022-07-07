@@ -1,10 +1,15 @@
 <template>
-  收藏
+  <Nav title="收藏列表"></Nav>
 </template>
 
 <script>
+import Nav from '../components/Nav.vue'
 export default {
-    name:'StoreView'
+    name:'StoreView',
+    components:{Nav},
+    setup(){
+      
+    }
 }
 </script>
 

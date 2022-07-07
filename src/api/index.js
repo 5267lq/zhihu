@@ -46,7 +46,7 @@ export default {
         return axios.get('/api/user_info')
     },
     userUpdate(username, file) {
-        let fm = FormData()
+        let fm =new FormData()
         fm.append("username", username)
         fm.append("file", file)
         return axios.post('/api/user_update', fm)

@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 // 导入VANT
-import Vant,{ Lazyload } from 'vant';
+import Vant, { Lazyload } from 'vant';
 import 'vant/lib/index.css';
 import 'amfe-flexible'
 // 处理最大宽度
