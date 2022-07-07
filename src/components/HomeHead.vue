@@ -2,8 +2,8 @@
   <header class="header-box">
     <div class="left">
       <div class="time">
-        <span>{{timeNow.day}}</span>
-        <span>{{timeNow.month}}</span>
+        <span>{{ timeNow.day }}</span>
+        <span>{{ timeNow.month }}</span>
       </div>
       <h1 class="tip">知乎日报</h1>
     </div>
@@ -16,9 +16,10 @@
 </template>
 
 <script>
-import { reactive, toRefs, computed } from "vue";
+import { reactive, toRefs, computed, onBeforeMount } from "vue";
 import timg from "../assets/images/timg.jpg";
 import { formatTime } from "@/assets/utils.js";
+import { useStore } from "vuex";
 export default {
   name: "HomeHead",
   props: {
@@ -28,9 +29,26 @@ export default {
     },
   },
   setup(props) {
-    let state = reactive({
-      //   pic: require("../assets/images/timg.jpg"),
-      pic: timg,
+    const store = useStore();
+    // let state = reactive({
+    //   //   pic: require("../assets/images/timg.jpg"),
+    //   pic: timg,
+    // });
+    let pic = computed(() => {
+      let { isLogin, info } = store.state;
+      if (isLogin && info) {
+        return info.pic|| timg;
+      }
+      return timg;
+    });
+    onBeforeMount(() => {
+      let { isLogin, info } = store.state;
+      if (isLogin === null) {
+        store.dispatch("changeisLoginAsync");
+      }
+      if (info === null) {
+        store.dispatch("changeInfoAsync");
+      }
     });
     let timeNow = computed(() => {
       let time = props.time || null;
@@ -54,7 +72,11 @@ export default {
         day,
       };
     });
-    return { ...toRefs(state), timeNow };
+    return {
+      //...toRefs(state),
+      pic,
+      timeNow,
+    };
   },
 };
 </script>

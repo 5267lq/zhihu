@@ -48,21 +48,23 @@ import Nav from "@/components/Nav.vue";
 import { reactive, toRefs, ref } from "vue";
 import api from "@/api/index.js";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { Toast } from "vant";
 export default {
   name: "LoginView",
   components: { Nav },
   setup() {
-    const state = reactive({
+    const store = useStore();
+    const router = useRouter();
+    const route = useRoute();
+    console.log(route);
+    let formBox = ref(null);
+    let state = reactive({
       phone: "",
       code: "",
       isBtnAccess: true,
       time: "60s",
     });
-    let formBox = ref(null);
-    const store = useStore();
-    const router = useRouter();
     //发送验证码
     const sendcode = async () => {
       try {
@@ -102,7 +104,13 @@ export default {
       store.commit("changeisLogin", true);
       store.dispatch("changeInfoAsync");
       Toast("登录成功");
-      router.back();
+      //跳转到指定地址
+      let from = route.query.from;
+      if (from) {
+        router.replace(`/${from}`);
+        return;
+      }
+      router.replace("/person");
     };
     return {
       ...toRefs(state),

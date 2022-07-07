@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import axios from "./http";
 export default {
     // 获取今日新闻
